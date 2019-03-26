@@ -1,25 +1,55 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Validation from './Validation/Validation'
+import Char from './Char/Char'
 
 class App extends Component {
+  state = {
+    length : 0,
+    word : '',
+  };
+
+  wordLengthHandler = (word) => {
+    let length = {...this.state.length};
+    length = word.length;
+    this.setState({length: length});
+  }
+
+  wordChangeHandler = (event) => {
+    let word = {...this.state.word};
+    word = event.target.value;
+    this.setState({word: word});
+    this.wordLengthHandler(word);
+  }
+
+  characterHandler = (style) => {
+    let word = [...this.state.word];
+    let code = word.map((letter) => {
+      return <Char 
+        style={style}
+        letter={letter}/>
+    })
+    console.log(this.state);
+    return code;
+  }
+
   render() {
+    const style = {
+      display: 'inline-block',
+      padding: '16px',
+      'text-align': 'center',
+      margin: '16px',
+      border: '1px solid black'
+    };
+
+    const characters = this.characterHandler(style);
+  
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <input type="text"
+        onChange = {(event) => this.wordChangeHandler(event)}/>
+        <Validation comment = {this.state.length < 5 ? "Too short" : "Enough"}/>
+        { characters }
       </div>
     );
   }
